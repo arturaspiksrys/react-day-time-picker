@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 import { Main, Footer } from './components/Layout';
 
@@ -42,6 +42,8 @@ function App() {
   const handleScheduled = date => {
     setIsScheduling(true);
     setScheduleErr('');
+
+    console.log('scheduled date: ', date); // eslint-disable-line no-console
 
     fakeRequest(date)
       .then(json => {
@@ -276,6 +278,16 @@ function App() {
 
               <tr>
                 <TD alignLeft>
+                  <InlineCode>goBackText</InlineCode>
+                </TD>
+                <TD>String</TD>
+                <TD>No</TD>
+                <TD>Go back</TD>
+                <TD alignLeft>Custom text for Go back.</TD>
+              </tr>
+
+              <tr>
+                <TD alignLeft>
                   <InlineCode>doneText</InlineCode>
                 </TD>
                 <TD>String</TD>
@@ -334,7 +346,7 @@ function App() {
         </p>
 
         <Interactive>
-          <DayTimePicker timeSlotSizeMinutes={60} />
+          <DayTimePicker locale={'lt'}  onConfirm={handleScheduled}timeSlotSizeMinutes={60} />
 
           <Caption>
             Go ahead and click around, but it&apos;s a semi-functional
@@ -363,7 +375,7 @@ function App() {
           <Container>
             <h3>Pick a Day and Time</h3>
 
-            <DayTimePicker timeSlotSizeMinutes={15} />
+            <DayTimePicker locale={'lt'} timeSlotSizeMinutes={15} />
           </Container>
         </Interactive>
 
@@ -487,8 +499,9 @@ function App() {
 
             <DayTimePicker
               timeSlotSizeMinutes={15}
-              isLoading={isScheduling}
-              isDone={isScheduled}
+              locale={'lt'}
+              isLoading={true}
+              isDone={true}
               err={scheduleErr}
               onConfirm={handleScheduled}
             />
@@ -704,7 +717,7 @@ function App() {
           <DarkContainer>
             <h3>Pick a Day and Time</h3>
 
-            <DayTimePicker timeSlotSizeMinutes={15} theme={theme} />
+            <DayTimePicker locale={'lt'}  timeSlotSizeMinutes={15} theme={theme} />
           </DarkContainer>
 
           <Caption>
@@ -727,6 +740,5 @@ function App() {
     </Main>
   );
 }
-
-const target = document.getElementById('root');
-render(<App />, target);
+const target = ReactDOM.createRoot(document.getElementById('root'));
+target.render(<App />);

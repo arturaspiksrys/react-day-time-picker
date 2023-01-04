@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import dateFns from 'date-fns';
+import { en, lt } from 'date-fns/locale';
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  subMonths,
+  addMonths,
+  isSameMonth,
+  isToday,
+  setDefaultOptions
+} from 'date-fns';
 
 import { PrevIcon, NextIcon } from '../Icons';
 
 import { Grid, Wrapper, MonthYear, DaysOfWeek, DaysOfMonth } from './Layout';
-import { WeekDays, WeekDay, WEEK_DAYS } from './WeekDays';
+import { WeekDays, WeekDay } from './WeekDays';
 import { MonthDays, MonthDay } from './MonthDays';
 
 import {
@@ -20,7 +31,7 @@ import { Calendar, FakeCalendar } from './Calendar';
 
 import generateDays from './generate-days';
 
-function Root({ validator, pickDay }) {
+function Root({ validator, pickDay, locale }) {
   const [month, setMonth] = useState(new Date());
   const [fakeMonth, setFakeMonth] = useState(month);
   const [animation, setAnimation] = useState('');
@@ -30,13 +41,29 @@ function Root({ validator, pickDay }) {
 
   const isAnimating = !!animation;
 
+  switch (locale) {
+    case 'lt':
+      setDefaultOptions({ locale: lt });
+      break;
+    default:
+      setDefaultOptions({ locale: en });
+  }
+
+  let WEEK_DAYS = [];
+  eachDayOfInterval({
+    start: startOfWeek(new Date()),
+    end: endOfWeek(new Date())
+  }).forEach(day => {
+    WEEK_DAYS.push(format(day, 'E'));
+  });
+
   // Handlers
   const handleNextMonth = () => {
     if (isAnimating) {
       return;
     }
 
-    const next = dateFns.addMonths(month, 1);
+    const next = addMonths(month, 1);
     setMonth(next);
     setAnimation('next');
   };
@@ -46,16 +73,14 @@ function Root({ validator, pickDay }) {
       return;
     }
 
-    const prev = dateFns.subMonths(month, 1);
+    const prev = subMonths(month, 1);
     setMonth(prev);
     setAnimation('prev');
   };
 
   const handleAnimationEnd = () => {
     const newFakeMonth =
-      animation === 'prev'
-        ? dateFns.subMonths(fakeMonth, 1)
-        : dateFns.addMonths(fakeMonth, 1);
+      animation === 'prev' ? subMonths(fakeMonth, 1) : addMonths(fakeMonth, 1);
 
     setFakeMonth(newFakeMonth);
     setAnimation('');
@@ -79,11 +104,11 @@ function Root({ validator, pickDay }) {
 
           <Wrapper>
             <CurrentMonth animation={animation}>
-              {dateFns.format(month, 'MMMM YYYY')}
+              {format(month, 'MMMM yyyy')}
             </CurrentMonth>
 
             <FakeCurrentMonth animation={animation}>
-              {dateFns.format(fakeMonth, 'MMMM YYYY')}
+              {format(fakeMonth, 'MMMM yyyy')}
             </FakeCurrentMonth>
           </Wrapper>
 
@@ -105,19 +130,19 @@ function Root({ validator, pickDay }) {
 
           <MonthDays>
             {days.map(day => {
-              const isSameMonth = dateFns.isSameMonth(day, startDay);
-              if (!isSameMonth) {
+              const isSameMonthVar = isSameMonth(day, startDay);
+              if (!isSameMonthVar) {
                 return <MonthDay key={day} />;
               }
 
-              const formatted = dateFns.format(day, 'D');
-              const isToday = dateFns.isToday(day);
+              const formatted = format(day, 'd');
+              const isTodayVar = isToday(day);
               const isValid = validator ? validator(day) : true;
               return (
                 <MonthDay
                   key={day}
                   isValid={isValid}
-                  isToday={isToday}
+                  isToday={false}
                   onClick={() => isValid && handlePickDay(day)}
                 >
                   {formatted}
@@ -139,20 +164,20 @@ function Root({ validator, pickDay }) {
           <DaysOfMonth>
             <MonthDays>
               {fakeDays.map(fakeDay => {
-                const isSameMonth = dateFns.isSameMonth(fakeDay, fakeStartDay);
-                if (!isSameMonth) {
+                const isSameMonthVar = isSameMonth(fakeDay, fakeStartDay);
+                if (!isSameMonthVar) {
                   return <MonthDay key={fakeDay} />;
                 }
 
-                const formatted = dateFns.format(fakeDay, 'D');
-                const isToday = dateFns.isToday(fakeDay);
+                const formatted = format(fakeDay, 'd');
+                const isTodayVar = isToday(fakeDay);
                 const isValid = validator ? validator(fakeDay) : true;
                 return (
                   <MonthDay
                     key={fakeDay}
-                    disabled={!isSameMonth}
+                    disabled={!isSameMonthVar}
                     isValid={isValid}
-                    isToday={isToday}
+                    isToday={isTodayVar}
                   >
                     {formatted}
                   </MonthDay>

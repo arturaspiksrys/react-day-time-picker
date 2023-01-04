@@ -16,6 +16,6 @@ export function preventPastDays(calendarDay) {
     0
   );
 
-  const isValid = calendarDay.getTime() >= today.getTime();
+  const isValid = calendarDay.getTime() > today.getTime();
   return isValid;
 }

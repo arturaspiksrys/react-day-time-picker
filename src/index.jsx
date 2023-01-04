@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import dateFns from 'date-fns';
+import { format } from 'date-fns';
 import { ThemeProvider } from 'styled-components';
 
-import { PopupWrapper, Popup, PopupHeader, PopupClose } from './Popup';
-import { ConfirmButton } from './Confirm';
-import { DayIcon, ClockIcon, SuccessIcon, FailedIcon } from './Icons';
-import { Success, Failed } from './Feedback';
+import {
+  PopupWrapper,
+  Popup,
+  PopupHeader,
+  PopupHeaderLine,
+  PopupClose,
+  DateTimeLabel
+} from './Popup';
+import { DayIcon, ClockIcon, FailedIcon } from './Icons';
+import { Failed } from './Feedback';
 
 import Calendar from './calendar';
 import TimeSlots from './time-slots';
@@ -20,9 +26,10 @@ function DayTimePicker({
   isDone,
   err,
   onConfirm,
-  confirmText,
-  loadingText,
-  doneText,
+  goBackText,
+  locale,
+  minSlotHour,
+  maxSlotHour,
   theme
 }) {
   const [pickedDay, setPickedDay] = useState(null);
@@ -39,14 +46,11 @@ function DayTimePicker({
     setPickedTime(time);
     setShowPickTime(false);
     setShowConfirm(true);
+    onConfirm(time);
   };
 
   const handleClosePickTime = () => {
     setShowPickTime(false);
-  };
-
-  const handleConfirm = () => {
-    onConfirm(pickedTime);
   };
 
   const handleCloseConfirm = () => {
@@ -57,17 +61,26 @@ function DayTimePicker({
   return (
     <ThemeProvider theme={theme}>
       <PopupWrapper>
-        <Calendar validator={preventPastDays} pickDay={handlePickDay} />
+        <Calendar
+          validator={preventPastDays}
+          locale={locale}
+          pickDay={handlePickDay}
+        />
 
         {showPickTime && (
           <Popup>
             <PopupHeader>
-              <p>
-                <DayIcon /> {dateFns.format(pickedDay, 'dddd, MMMM Do, YYYY')}
-              </p>
-              <p>
-                <PopupClose onClick={handleClosePickTime}>Go Back</PopupClose>
-              </p>
+              <PopupHeaderLine>
+                <DayIcon />
+                <DateTimeLabel>
+                  {format(pickedDay, 'MMMM dd, yyyy')}
+                </DateTimeLabel>
+              </PopupHeaderLine>
+              <PopupHeaderLine>
+                <PopupClose onClick={handleClosePickTime}>
+                  {goBackText}
+                </PopupClose>
+              </PopupHeaderLine>
             </PopupHeader>
 
             <TimeSlots
@@ -75,6 +88,8 @@ function DayTimePicker({
               slotSizeMinutes={timeSlotSizeMinutes}
               validator={timeSlotValidator}
               pickTime={handlePickTime}
+              minSlotHour={minSlotHour}
+              maxSlotHour={maxSlotHour}
             />
           </Popup>
         )}
@@ -82,34 +97,25 @@ function DayTimePicker({
         {showConfirm && (
           <Popup>
             <PopupHeader>
-              <p>
-                <DayIcon /> {dateFns.format(pickedTime, 'dddd, MMMM Do, YYYY')}
-              </p>
-
-              <p>
-                <ClockIcon /> {dateFns.format(pickedTime, 'HH:mm')}
-              </p>
+              <PopupHeaderLine>
+                <DayIcon />
+                <DateTimeLabel>
+                  {format(pickedTime, 'MMMM dd, yyyy')}
+                </DateTimeLabel>
+              </PopupHeaderLine>
+              <PopupHeaderLine>
+                <ClockIcon />
+                <DateTimeLabel>{format(pickedTime, 'HH:mm')}</DateTimeLabel>
+              </PopupHeaderLine>
 
               {!isDone && (
-                <p>
+                <PopupHeaderLine>
                   <PopupClose disabled={isLoading} onClick={handleCloseConfirm}>
-                    Go Back
+                    {goBackText}
                   </PopupClose>
-                </p>
+                </PopupHeaderLine>
               )}
             </PopupHeader>
-
-            {!isDone ? (
-              <ConfirmButton disabled={isLoading} onClick={handleConfirm}>
-                {isLoading ? loadingText : confirmText}
-              </ConfirmButton>
-            ) : doneText ? (
-              <Success>
-                <p>
-                  <SuccessIcon /> {doneText}
-                </p>
-              </Success>
-            ) : null}
 
             {err && (
               <Failed>
@@ -132,9 +138,10 @@ DayTimePicker.propTypes = {
   isDone: PropTypes.bool.isRequired,
   err: PropTypes.string,
   onConfirm: PropTypes.func.isRequired,
-  confirmText: PropTypes.string,
-  loadingText: PropTypes.string,
-  doneText: PropTypes.string,
+  goBackText: PropTypes.string,
+  locale: PropTypes.string,
+  minSlotHour: PropTypes.number,
+  maxSlotHour: PropTypes.number,
   theme: PropTypes.shape({
     primary: PropTypes.string,
     secondary: PropTypes.string,
@@ -157,9 +164,10 @@ DayTimePicker.propTypes = {
 };
 
 DayTimePicker.defaultProps = {
-  confirmText: 'Schedule',
-  loadingText: 'Scheduling..',
-  doneText: 'Your event has been scheduled!',
+  goBackText: 'Go Back',
+  locale: 'en',
+  minSlotHour: 8,
+  maxSlotHour: 20,
   theme: {
     primary: '#3a9ad9',
     secondary: '#f0f0f0',

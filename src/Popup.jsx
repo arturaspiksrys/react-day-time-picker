@@ -26,15 +26,27 @@ export const Popup = styled.div`
 `;
 
 export const PopupHeader = styled.header`
-  padding: 1em 0;
+  padding: 1em;
+  background-color: ${props => props.theme.secondary};
 `;
+
+export const DateTimeLabel = styled.div`
+  margin: 0 0.5em;
+`;
+
+export const PopupHeaderLine = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 0.5em 0;
+`;
+
 
 export const PopupClose = styled.button`
   margin: 0;
   padding: 0;
   border: 0;
   background: none;
-  font-size: 1em;
+  font-size: 0.9em;
   color: ${props => props.theme.primary};
   text-decoration: underline;
 

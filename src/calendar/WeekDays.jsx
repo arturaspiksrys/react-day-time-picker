@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-export const WEEK_DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-
 export const WeekDays = styled.ul`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
