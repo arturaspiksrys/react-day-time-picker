@@ -11,7 +11,14 @@ import {
   PopupClose,
   DateTimeLabel
 } from './Popup';
-import { DayIcon, ClockIcon, FailedIcon } from './Icons';
+import {
+  DayIcon,
+  ClockIcon,
+  FailedIcon,
+  MapPinIcon,
+  ExternalLinkIcon,
+  ContactIcon
+} from './Icons';
 import { Failed } from './Feedback';
 
 import Calendar from './calendar';
@@ -22,14 +29,15 @@ import { preventPastDays } from './validators';
 function DayTimePicker({
   timeSlotValidator,
   timeSlotSizeMinutes,
-  isLoading,
-  isDone,
   err,
   onConfirm,
   goBackText,
   locale,
   minSlotHour,
   maxSlotHour,
+  locationText,
+  userName,
+  userAvatarUrl,
   theme
 }) {
   const [pickedDay, setPickedDay] = useState(null);
@@ -58,6 +66,89 @@ function DayTimePicker({
     setShowPickTime(true);
   };
 
+  const showUser = () => {
+    if (userName) {
+      const avatar = userAvatarUrl ? (
+        <img
+          src={userAvatarUrl}
+          alt={userName}
+          style={{
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%'
+
+          }}
+        />
+      ) : (
+        <ContactIcon />
+      );
+
+      return (
+        <PopupHeaderLine>
+          {avatar}
+          <DateTimeLabel>{userName}</DateTimeLabel>
+        </PopupHeaderLine>
+      );
+    }
+  };
+
+  const showLocation = () => {
+    if (locationText) {
+      const googleURL =
+        'https://www.google.com/maps/place/' + encodeURIComponent(locationText);
+      return (
+        <PopupHeaderLine>
+          <MapPinIcon />
+          <DateTimeLabel>
+            <a
+              href={googleURL}
+              style={{
+                color: '#000',
+                margin: '0 5px 0 0',
+                textDecoration: 'none'
+              }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {locationText}
+            </a>
+            <ExternalLinkIcon />
+          </DateTimeLabel>
+        </PopupHeaderLine>
+      );
+    }
+  };
+
+  const showDate = () => {
+    if (pickedDay) {
+      return (
+        <PopupHeaderLine>
+          <DayIcon />
+          <DateTimeLabel>{format(pickedDay, 'MMMM dd, yyyy')}</DateTimeLabel>
+        </PopupHeaderLine>
+      );
+    }
+  };
+
+  const showTime = () => {
+    if (pickedTime) {
+      return (
+        <PopupHeaderLine>
+          <ClockIcon />
+          <DateTimeLabel>{format(pickedTime, 'HH:mm')}</DateTimeLabel>
+        </PopupHeaderLine>
+      );
+    }
+  };
+
+  const showBackLink = action => {
+    return (
+      <PopupHeaderLine>
+        <PopupClose onClick={action}>{goBackText}</PopupClose>
+      </PopupHeaderLine>
+    );
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <PopupWrapper>
@@ -70,17 +161,10 @@ function DayTimePicker({
         {showPickTime && (
           <Popup>
             <PopupHeader>
-              <PopupHeaderLine>
-                <DayIcon />
-                <DateTimeLabel>
-                  {format(pickedDay, 'MMMM dd, yyyy')}
-                </DateTimeLabel>
-              </PopupHeaderLine>
-              <PopupHeaderLine>
-                <PopupClose onClick={handleClosePickTime}>
-                  {goBackText}
-                </PopupClose>
-              </PopupHeaderLine>
+              {showUser()}
+              {showLocation()}
+              {showDate()}
+              {showBackLink(handleClosePickTime)}
             </PopupHeader>
 
             <TimeSlots
@@ -97,24 +181,11 @@ function DayTimePicker({
         {showConfirm && (
           <Popup>
             <PopupHeader>
-              <PopupHeaderLine>
-                <DayIcon />
-                <DateTimeLabel>
-                  {format(pickedTime, 'MMMM dd, yyyy')}
-                </DateTimeLabel>
-              </PopupHeaderLine>
-              <PopupHeaderLine>
-                <ClockIcon />
-                <DateTimeLabel>{format(pickedTime, 'HH:mm')}</DateTimeLabel>
-              </PopupHeaderLine>
-
-              {!isDone && (
-                <PopupHeaderLine>
-                  <PopupClose disabled={isLoading} onClick={handleCloseConfirm}>
-                    {goBackText}
-                  </PopupClose>
-                </PopupHeaderLine>
-              )}
+              {showUser()}
+              {showLocation()}
+              {showDate()}
+              {showTime()}
+              {showBackLink(handleCloseConfirm)}
             </PopupHeader>
 
             {err && (
@@ -142,6 +213,9 @@ DayTimePicker.propTypes = {
   locale: PropTypes.string,
   minSlotHour: PropTypes.number,
   maxSlotHour: PropTypes.number,
+  locationText: PropTypes.string,
+  userName: PropTypes.string,
+  userAvatarUrl: PropTypes.string,
   theme: PropTypes.shape({
     primary: PropTypes.string,
     secondary: PropTypes.string,

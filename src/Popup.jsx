@@ -32,6 +32,8 @@ export const PopupHeader = styled.header`
 
 export const DateTimeLabel = styled.div`
   margin: 0 0.5em;
+  display: flex;
+  align-items: center;
 `;
 
 export const PopupHeaderLine = styled.div`

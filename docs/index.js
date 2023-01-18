@@ -346,7 +346,17 @@ function App() {
         </p>
 
         <Interactive>
-          <DayTimePicker locale={'lt'}  onConfirm={handleScheduled}timeSlotSizeMinutes={60} />
+          <DayTimePicker
+            locale={'lt'}
+            goBackText={'Atgal'}
+            userName={'Jonas Jonaitis'}
+            userAvatarUrl={
+              'https://avatars0.githubusercontent.com/u/1393946?s=460&v=4'
+            }
+            locationText={'Mildos g. 1, Vilnius, Lithuania'}
+            onConfirm={handleScheduled}
+            timeSlotSizeMinutes={60}
+          />
 
           <Caption>
             Go ahead and click around, but it&apos;s a semi-functional
@@ -717,7 +727,11 @@ function App() {
           <DarkContainer>
             <h3>Pick a Day and Time</h3>
 
-            <DayTimePicker locale={'lt'}  timeSlotSizeMinutes={15} theme={theme} />
+            <DayTimePicker
+              locale={'lt'}
+              timeSlotSizeMinutes={15}
+              theme={theme}
+            />
           </DarkContainer>
 
           <Caption>

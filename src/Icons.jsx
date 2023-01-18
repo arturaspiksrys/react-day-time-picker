@@ -7,7 +7,10 @@ import {
   CalendarCheck,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  MapPin,
+  ExternalLink,
+  Contact
 } from 'lucide-react';
 
 const _propTypes = {
@@ -25,12 +28,12 @@ export const NextIcon = ({ className }) => (
 NextIcon.propTypes = _propTypes;
 
 export const DayIcon = ({ className }) => (
-  <CalendarCheck size={17} color={'#848484'} className={className} />
+  <CalendarCheck size={20} color={'#848484'} className={className} />
 );
 DayIcon.propTypes = _propTypes;
 
 export const ClockIcon = ({ className }) => (
-  <Clock size={17} color={'#848484'} className={className} />
+  <Clock size={20} color={'#848484'} className={className} />
 );
 ClockIcon.propTypes = _propTypes;
 
@@ -43,3 +46,16 @@ export const FailedIcon = ({ className }) => (
   <AlertCircle size={20} className={className} />
 );
 FailedIcon.propTypes = _propTypes;
+
+export const MapPinIcon = ({ className }) => (
+  <MapPin size={20} color={'#848484'} className={className} />
+);
+
+export const ContactIcon = ({ className }) => (
+  <Contact size={20} color={'#848484'} className={className} />
+);
+
+export const ExternalLinkIcon = ({ className }) => (
+  <ExternalLink size={12} className={className} />
+);
+MapPinIcon.propTypes = _propTypes;
