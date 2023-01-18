@@ -4,7 +4,6 @@ export const PopupWrapper = styled.div`
   position: relative;
   text-align: center;
   width: 420px;
-  margin: auto;
 
   @media (max-width: 500px) {
     width: 100%;
@@ -39,7 +38,7 @@ export const DateTimeLabel = styled.div`
 export const PopupHeaderLine = styled.div`
   display: flex;
   align-items: center;
-  margin: 0.5em 0;
+  margin: 0.5em 0 0.75em 0;
 `;
 
 

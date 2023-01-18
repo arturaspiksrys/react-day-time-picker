@@ -353,6 +353,9 @@ function App() {
             userAvatarUrl={
               'https://avatars0.githubusercontent.com/u/1393946?s=460&v=4'
             }
+            locationUrl={
+              'https://www.google.com/maps/place/Mildos+g.+1,+Vilnius,+Lithuania'
+            }
             locationText={'Mildos g. 1, Vilnius, Lithuania'}
             onConfirm={handleScheduled}
             timeSlotSizeMinutes={60}

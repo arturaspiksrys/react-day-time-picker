@@ -36,6 +36,7 @@ function DayTimePicker({
   minSlotHour,
   maxSlotHour,
   locationText,
+  locationUrl,
   userName,
   userAvatarUrl,
   theme
@@ -76,7 +77,6 @@ function DayTimePicker({
             width: '24px',
             height: '24px',
             borderRadius: '50%'
-
           }}
         />
       ) : (
@@ -94,25 +94,29 @@ function DayTimePicker({
 
   const showLocation = () => {
     if (locationText) {
-      const googleURL =
-        'https://www.google.com/maps/place/' + encodeURIComponent(locationText);
       return (
         <PopupHeaderLine>
           <MapPinIcon />
           <DateTimeLabel>
-            <a
-              href={googleURL}
-              style={{
-                color: '#000',
-                margin: '0 5px 0 0',
-                textDecoration: 'none'
-              }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {locationText}
-            </a>
-            <ExternalLinkIcon />
+            {locationUrl ? (
+              <>
+                <a
+                  href={locationUrl}
+                  style={{
+                    color: '#000',
+                    margin: '0 5px 0 0',
+                    textDecoration: 'none'
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {locationText}
+                </a>
+                <ExternalLinkIcon />
+              </>
+            ) : (
+              locationText
+            )}
           </DateTimeLabel>
         </PopupHeaderLine>
       );
@@ -214,6 +218,7 @@ DayTimePicker.propTypes = {
   minSlotHour: PropTypes.number,
   maxSlotHour: PropTypes.number,
   locationText: PropTypes.string,
+  locationUrl: PropTypes.string,
   userName: PropTypes.string,
   userAvatarUrl: PropTypes.string,
   theme: PropTypes.shape({
