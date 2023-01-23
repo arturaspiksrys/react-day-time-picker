@@ -60,11 +60,13 @@ function DayTimePicker({
 
   const handleClosePickTime = () => {
     setShowPickTime(false);
+    onConfirm(null);
   };
 
   const handleCloseConfirm = () => {
     setShowConfirm(false);
     setShowPickTime(true);
+    onConfirm(null);
   };
 
   const showUser = () => {
