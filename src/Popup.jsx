@@ -21,7 +21,7 @@ export const Popup = styled.div`
   height: 100%;
   z-index: 3;
   background-color: ${props => props.theme.background};
-  font-size: 1.1em;
+  font-size: 1em;
 `;
 
 export const PopupHeader = styled.header`
