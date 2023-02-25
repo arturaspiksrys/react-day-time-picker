@@ -31,7 +31,7 @@ function generateTimeSlots(
     }
   }
 
-  const end = setHours(addDays(selectedDate, 1), maxSlotHour + 1);
+  const end = setHours(addDays(selectedDate, 0), maxSlotHour + 1);
 
   let slot = start;
   let timeSlots = [];
