@@ -1,6 +1,6 @@
 {
   "name": "@arturas-wm/react-day-time-picker",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A React component to help with scheduling a day and time.",
   "scripts": {
     "test": "jest",
